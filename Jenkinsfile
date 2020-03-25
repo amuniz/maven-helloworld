@@ -4,6 +4,7 @@ pipeline {
         timestamps()
         skipDefaultCheckout()
     }
+    agent none
     stages {
         stage('Compile') {
             parallel {
