@@ -14,9 +14,11 @@ pipeline {
                 }
                 stage ('Windows') {
                     agent any
-                    checkout scm
-                    withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
-                        sh 'mvn --batch-mode --errors --no-transfer-progress -Dspotbugs.skip=true install -DskipTests'
+                    steps {
+                        checkout scm
+                        withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
+                            sh 'mvn --batch-mode --errors --no-transfer-progress -Dspotbugs.skip=true install -DskipTests'
+                        }
                     }
                 }
             }
