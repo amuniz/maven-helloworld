@@ -38,6 +38,11 @@ pipeline {
             }
         }
         stage ('Release') {
+            when {
+                branch 'master'
+                beforeAgent true
+                beforeInput true
+            }
             input {
                 message "Do you want to proceed with release?"
             }

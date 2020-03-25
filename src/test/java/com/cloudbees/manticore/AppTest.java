@@ -42,4 +42,23 @@ public class AppTest extends TestCase {
             return;
         }
     }
+
+    /**
+     * Rigourous Test :-)
+     */
+    public void anotherTest() throws InterruptedException {
+        Integer it = Integer.getInteger("iterations");
+        assertTrue(false);
+        if (it == null) {
+            assertTrue(false);
+        }
+        if (it != null) {
+            for (int i = 0; i < it; i++) {
+                Thread.sleep(1000);
+                System.out.println("Iteration " + i);
+            }
+            return;
+        }
+    }
+
 }
