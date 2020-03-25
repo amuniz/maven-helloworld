@@ -1,38 +1,46 @@
-stage 'Compile'
-node('linux1') {
-    checkout scm
-    // use for non multibranch: git 'https://github.com/amuniz/maven-helloworld.git'
-    def mvnHome = tool 'maven-3'
-    sh "${mvnHome}/bin/mvn clean install -DskipTests"
-    stash 'working-copy'
-}
+pipeline {
+    stages {
+        stage('Compile') {
+            parallel {
+                stage ('Linux') {
+                    agent any
+                    steps {
+                        checkout scm
+                        withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
+                            sh 'mvn --batch-mode --errors --no-transfer-progress -Dspotbugs.skip=true install -DskipTests'
+                        }
+                    }
 
-stage 'Test'
-parallel one: {
-    node('linux1') {
-        unstash 'working-copy'
-        def mvnHome = tool 'maven-3'
-        sh "${mvnHome}/bin/mvn test -Diterations=10"
+                }
+                stage ('Windows') {
+                    agent any
+                    checkout scm
+                    withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
+                        sh 'mvn --batch-mode --errors --no-transfer-progress -Dspotbugs.skip=true install -DskipTests'
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            agent any
+            steps {
+                checkout scm
+                withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
+                    sh 'mvn --show-version --batch-mode --errors --no-transfer-progress -Dmaven.test.failure.ignore=true -Dspotbugs.failOnError=false install -Diterations=1'
+                }
+            }
+        }
+        stage ('Release') {
+            agent any
+            steps {
+                input {
+                    message "Do you want to proceed with release?"
+                }
+                checkout scm
+                withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
+                    sh 'mvn --show-version --batch-mode --errors --no-transfer-progress release:prepare release:perform -Diterations=1 -Drelease.arguments="-Diterations=1"'
+                }
+            }
+        }
     }
-}, two: {
-    node('linux2') {
-        unstash 'working-copy'
-        def mvnHome = tool 'maven-3'
-        sh "${mvnHome}/bin/mvn test -Diterations=5"
-    }
-}, failFast: true
-
-stage 'Code Quality'
-node('linux1') {
-    unstash 'working-copy'
-    step([$class: 'CheckStylePublisher'])
-    step([$class: 'FindBugsPublisher'])
-    step([$class: 'PmdPublisher'])
-}
-
-stage name: 'Deploy', concurrency: 1
-def path = input message: 'Where should I deploy this build?', parameters: [[$class: 'StringParameterDefinition', name: 'FILE_PATH']]
-node('linux1') {
-    unstash 'working-copy'
-    sh "cp target/example-1.0-SNAPSHOT.jar ${path}"
 }

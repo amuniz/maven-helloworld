@@ -30,6 +30,9 @@ public class AppTest extends TestCase {
      */
     public void testApp() throws InterruptedException {
         Integer it = Integer.getInteger("iterations");
+	if (it == null) {
+	    assertTrue(false);
+	}
         if (it != null) {
             for (int i = 0; i < it; i++) {
                 Thread.sleep(1000);
@@ -37,6 +40,5 @@ public class AppTest extends TestCase {
             }
             return;
         }
-        assertTrue(false);
     }
 }
