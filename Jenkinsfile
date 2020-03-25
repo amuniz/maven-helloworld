@@ -35,10 +35,10 @@ pipeline {
         }
         stage ('Release') {
             agent any
-            steps {
-                input {
-                    message "Do you want to proceed with release?"
-                }
+            input {
+                message "Do you want to proceed with release?"
+            }
+            steps {    
                 checkout scm
                 withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
                     //sh 'mvn --show-version --batch-mode --errors --no-transfer-progress release:prepare release:perform -Diterations=1 -Drelease.arguments="-Diterations=1"'
