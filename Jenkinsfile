@@ -1,10 +1,11 @@
 pipeline {
-    agent none
+    agent {
+        label 'linux-default'
+    }
     stages {
         stage('Compile') {
             parallel {
                 stage ('Linux') {
-                    agent any
                     steps {
                         checkout scm
                         withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
@@ -14,7 +15,6 @@ pipeline {
 
                 }
                 stage ('Windows') {
-                    agent any
                     steps {
                         checkout scm
                         withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
@@ -25,7 +25,6 @@ pipeline {
             }
         }
         stage('Test') {
-            agent any
             steps {
                 checkout scm
                 withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
@@ -34,11 +33,10 @@ pipeline {
             }
         }
         stage ('Release') {
-            agent any
             input {
                 message "Do you want to proceed with release?"
             }
-            steps {    
+            steps {
                 checkout scm
                 withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
                     //sh 'mvn --show-version --batch-mode --errors --no-transfer-progress release:prepare release:perform -Diterations=1 -Drelease.arguments="-Diterations=1"'
