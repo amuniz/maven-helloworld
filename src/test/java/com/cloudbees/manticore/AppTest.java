@@ -30,6 +30,7 @@ public class AppTest extends TestCase {
      */
     public void testApp() throws InterruptedException {
         Integer it = Integer.getInteger("iterations");
+	assertTrue(false);
 	if (it == null) {
 	    assertTrue(false);
 	}
