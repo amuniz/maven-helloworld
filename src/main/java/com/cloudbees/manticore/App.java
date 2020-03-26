@@ -8,7 +8,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        String a = null;
+        String a = "null";
         System.out.println(a.toString());
         System.out.println( "Hello World!" );
         // TODO: this is a task
