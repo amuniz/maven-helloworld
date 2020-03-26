@@ -4,13 +4,14 @@ pipeline {
         timestamps()
         skipDefaultCheckout()
     }
-    agent {
-        label 'linux-default'
-    }
+    agent none
     stages {
         stage('Compile') {
             parallel {
                 stage ('Linux') {
+                    agent {
+                        label 'linux-default'
+                    }
                     steps {
                         checkout scm
                         withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
@@ -20,6 +21,9 @@ pipeline {
 
                 }
                 stage ('Windows') {
+                    agent {
+                        label 'linux-default'
+                    }
                     steps {
                         checkout scm
                         withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
@@ -30,6 +34,9 @@ pipeline {
             }
         }
         stage('Test') {
+            agent {
+                label 'linux-default'
+            }
             steps {
                 checkout scm
                 withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
@@ -38,6 +45,14 @@ pipeline {
             }
         }
         stage ('Release') {
+            agent {
+                label 'linux-default'
+            }
+            when {
+                branch 'master'
+                beforeAgent true
+                beforeInput true
+            }
             input {
                 message "Do you want to proceed with release?"
             }
