@@ -40,7 +40,8 @@ pipeline {
             steps {
                 checkout scm
                 withMaven(jdk: 'jdk-8u242', maven: 'maven-3.6.3') {
-                    sh 'mvn --show-version --batch-mode --errors --no-transfer-progress -Dmaven.test.failure.ignore=true install -Diterations=1'
+                    sh 'mvn --show-version --batch-mode --errors --no-transfer-progress -Dmaven.test.failure.ignore=true -Dspotbugs.failOnError=false install -Diterations=1'
+                    recordIssues(tool: spotBugs(), qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]])
                 }
             }
         }
