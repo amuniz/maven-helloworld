@@ -77,13 +77,9 @@ $id$
                             <spotbugsXmlOutput>false</spotbugsXmlOutput>
                             <effort>Default</effort>
                             <threshold>Medium</threshold>
-                            <failOnError>true</failOnError>
                         </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <failOnError>true</failOnError>
-                </configuration>
             </plugin>
         </plugins>
     </build>
