@@ -7,7 +7,9 @@ pipeline {
             }
             steps {
                 checkout scm
-                sh 'cat pom.xml'
+                withCredentials([usernamePassword(credentialsId: 'github-amuniz-token', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                    sh 'cat pom.xml'
+                }
             }
         }
     }
