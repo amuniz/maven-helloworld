@@ -1,7 +1,7 @@
 pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: "${env.CHANGE_ID == null ? '100' : '5'}", artifactNumToKeepStr: "${env.CHANGE_ID == null ? '5' : '1'}"))
-        timestamps()
+        //timestamps()
         skipDefaultCheckout()
     }
     agent none
