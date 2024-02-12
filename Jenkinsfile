@@ -2,7 +2,9 @@ pipeline {
   agent none
   stages {
     stage('Compile') {
-      echo 'Compile!'
+      steps {
+        echo 'Compile!'
+      }
     }
   }
 }
