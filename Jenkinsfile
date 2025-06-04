@@ -23,6 +23,8 @@ podTemplate(
 ) {
     node(POD_LABEL) {
       checkout scm
-      sh 'mvn --show-version --batch-mode --errors --no-transfer-progress -Dmaven.test.failure.ignore=true -Dspotbugs.failOnError=false install -Diterations=1'
+      container('maven') {
+        sh 'mvn --show-version --batch-mode --errors --no-transfer-progress -Dmaven.test.failure.ignore=true -Dspotbugs.failOnError=false install -Diterations=1'
+      }
     }
 }
