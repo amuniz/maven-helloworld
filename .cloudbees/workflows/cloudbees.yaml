@@ -8,11 +8,13 @@ on:
 jobs:
   build:
     steps:
-      - uses: https://github.com/cloudbees-io/checkout@v1
+      - name: Checkout
+        uses: https://github.com/cloudbees-io/checkout@v1
       - name: Build
         kind: build
         uses: docker://maven:3.9.11-eclipse-temurin-25-noble
         shell: sh
         run: |
           ls -la
-          mvn clean install
+
+          mvn clean install -Diterations=2
