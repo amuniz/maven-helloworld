@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Build
         kind: build
-        uses: maven:3.9.11-eclipse-temurin-25-noble
+        uses: docker://maven:3.9.11-eclipse-temurin-25-noble
         shell: sh
         run: |
           mvn clean install
